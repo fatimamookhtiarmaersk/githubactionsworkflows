@@ -1,2 +1,4 @@
-myownlabel:
-  - workflows/**/*
+triage:
+  - '**'
+  - '.*'
+  - '.*/**'
