@@ -5,7 +5,11 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+env:
+  AZURE_WEBAPP_NAME:  githubactionswebapp
+  NETCORE_VERSION:  '3.1.x'
+  AZURE_WEBAPP_PACKAGE_PATH:  './published'
+  WEB_APP_PROJECT_PATH: './WebApplication1/'
 jobs:
   build:
 
@@ -22,10 +26,17 @@ jobs:
     - name: list some key files
       run: ls -lrt
     - name: Restore dependencies
-      run: dotnet restore ./WebApplication1/
+      run: dotnet restore ${{ env.WEB_APP_PROJECT_PATH }}
     - name: Build
-      run: dotnet build --configuration Release --no-restore ./WebApplication1/
+      run: dotnet build --configuration Release --no-restore ${{ env.WEB_APP_PROJECT_PATH }}
     - name: Test
-      run: dotnet test --no-build --verbosity normal ./WebApplication1/
+      run: dotnet test --no-build --verbosity normal ${{ env.WEB_APP_PROJECT_PATH }}
     - name: Publish
-      run: dotnet publish --configuration Release --no-build ./WebApplication1/ --output './published'
+      run: dotnet publish --configuration Release --no-build ${{ env.WEB_APP_PROJECT_PATH }} --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    
+    - name: Deploy to Azure WebApp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH}}
