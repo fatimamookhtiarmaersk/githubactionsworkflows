@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
 env:
-  AZURE_WEBAPP_NAME:  githubactionswebapp
+  AZURE_WEBAPP_NAME:  wagithubactionswebapp
   NETCORE_VERSION:  '3.1.x'
   AZURE_WEBAPP_PACKAGE_PATH:  './published'
   WEB_APP_PROJECT_PATH: './WebApplication1/'
